@@ -9,7 +9,7 @@
 <body>
 <form>
 		<%
-			out.print("Dodano ucznia/ów  ");
+			out.print("Dodano użytkownika  ");
 		%>
 		<A HREF=Logowanie.jsp>Wyloguj</A>
 </form>

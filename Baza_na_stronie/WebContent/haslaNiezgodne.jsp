@@ -9,9 +9,9 @@
 <body>
 <form>
 		<%
-			out.print("Dodano ucznia/ów  ");
+			out.print("hasla nie są zgodne  ");
 		%>
-		<A HREF=Logowanie.jsp>Wyloguj</A>
+		<A HREF=Rejestracja.jsp>cofnij</A>
 </form>
 </body>
 </html>

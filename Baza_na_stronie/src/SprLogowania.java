@@ -1,5 +1,8 @@
-
+import java.sql.Statement;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +25,23 @@ public class SprLogowania extends HttpServlet {
 			throws ServletException, IOException {
 		response.setCharacterEncoding("ISO-8859-2");
 		String login = request.getParameter("login");
-		String haslo = request.getParameter("haslo");
-
-		if ((login.equals("java")) && (haslo.equals("java"))) {
-			response.sendRedirect("wybor.jsp");
-		} else {
-			response.sendRedirect("nieprawidlowe.jsp");
+		String haselo = request.getParameter("haslo");
+		String url = "jdbc:mysql://localhost:3306/java";
+		String user = "java";
+		String password = "java";
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection conn = DriverManager.getConnection(url, user, password);
+			Statement st = conn.createStatement();
+			String zapytanieOlog = "SELECT user, password FROM 'mysql.user' ";
+			st.executeUpdate(zapytanieOlog);
+			if ((login.equals("java")) && (haselo.equals("java"))) {
+				response.sendRedirect("wybor.jsp");
+			} else {
+				response.sendRedirect("nieprawidlowe.jsp");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

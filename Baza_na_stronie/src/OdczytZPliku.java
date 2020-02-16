@@ -9,11 +9,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Scanner;
+import java.io.File;
 
-@WebServlet("/OdczytZBazy")
-public class OdczytZBazy extends HttpServlet {
+@WebServlet("/OdczytZPliku")
+public class OdczytZPliku extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public OdczytZBazy() {
+	public OdczytZPliku() {
 		super();
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -26,29 +28,26 @@ public class OdczytZBazy extends HttpServlet {
 		String url = "jdbc:mysql://localhost:3306/java";
 		String user = "java";
 		String password = "java";
-		PrintWriter out = response.getWriter();
-		String orderBy = request.getParameter("order");
+		File plik = new File("D:/Programowanie/bazaDoOdczytania.txt");
+		Scanner odczyt = new Scanner(plik);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = DriverManager.getConnection(url, user, password);
 			Statement st = conn.createStatement();
-			String zapytanie;
-			if (orderBy.equals("ascending")) {
-				zapytanie = "select * from uczniowie order by wiek asc";
-			} else {
-				zapytanie = "select * from uczniowie order by wiek desc";
-			}
-			ResultSet rs = st.executeQuery(zapytanie);
-			while (rs.next()) {
-				int lp = rs.getInt("lp");
-				String imie = rs.getString("imie");
-				String nazwisko = rs.getString("nazwisko");
-				int wiek = rs.getInt("wiek");
-				out.println(lp + " " + imie + " " + nazwisko + " " + wiek);
+			
+			while (odczyt.hasNextLine()) {
+				String imie = odczyt.nextLine();
+				String nazwisko= odczyt.nextLine();
+				String w = odczyt.nextLine();
+				int wiek = Integer.parseInt(w);
+				String zapytanie = "insert into uczniowie (imie, nazwisko, wiek) values('" + imie + "', '" + nazwisko + "'," + wiek + ") ";
+				st.executeUpdate(zapytanie);
+				response.sendRedirect("dodanoUcznia.jsp");
 			}
 		} catch (Exception exc) {
 			exc.printStackTrace();
 			System.out.println("cos nie pyklo");
 		}
+		odczyt.close();
 	}
 }
